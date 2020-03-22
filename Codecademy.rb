@@ -785,3 +785,23 @@ crew = {
 first_half = lambda { |key, value| value < "M" }
 a_to_m = crew.select(&first_half)
 puts a_to_m
+
+
+# EXERCISE
+numbers = []
+
+while numbers.length < 5
+    numbers << rand(100)
+end
+# rand(max) will provide random number < max
+puts numbers
+
+
+numbers = [7, 9, 13, 25, 18]
+
+count = 0
+
+until count == numbers.size
+  puts numbers[count]
+  count += 1
+end
