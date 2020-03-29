@@ -1,0 +1,280 @@
+Lesson_2
+kick off
+  - Goal: 
+    1. build fluency in language syntax
+    2. learn to think like a programmer
+    3. learn to build application
+    4. debugging mindset
+  - 3 main buckets:
+    1. learn to program procedurally
+    2. OOP(Object-Oriented Programming)
+    3. other stuff: testing, blocks, tools, problem solving, developing familiarity with the language
+  - Learning to code vs learning to program
+    1. Ruby grammer & syntax just like English grammer & vocabulary
+    2. Building application just like writing essays and novels
+    3. very frustrating to jump between the two(English & Program language)
+    4. pseudo code(Use English plain to write and list down all possibilities logically before running every code)
+  - Looking for help
+    1. Search(google) using the "right phrases" by use the stack trace, reading error messages and adding "ruby"
+    2. Stack Overflow
+    3. Ruby Docs(Not Rails Docs)
+  - Asking for help
+    1. treat us like coworkers
+    2. push everything to github
+    3. forums
+    4. chatrooms
+    5. TA office hours
+  - We're learning: Application Development
+    1. lots of different types of Programming
+    2. Ruby is the syntax, good for all kinds of Programming
+
+A Note on Style
+  Parentheses
+    - Optional when you invoke a method
+    - To be more clear thile you're getting adjusted to reading Ruby, will always use paretheses whrn invoking a method in this lesson
+    - Example: gets().chomp() instead of gets.chomp
+  puts and gets
+    - display something: puts; ask the user for some input: gets
+    - We are going to call those methods with their module, like Kernel.puts() or Kernel.gets()
+    - It's important to understand that all methods come from somewhere
+
+Truthiness
+  - "true" or "false" build conditional logic and understand the state of an object or expression
+  - boolean data type, boolean is an object whose only purpose is to convey whether it is "true" or "false"s
+      true.class          # => TrueClass
+      true.nil?           # => false
+      true.to_s           # => "true"
+      true.methods        # => list of methods you can call on the true object
+      #Same as "false"
+  - Logical Operators
+    1. &&: "and" operator, return true only if both expressions being evaluated are true
+      #num > 10 && num.odd? => false if num = 5, Ruby didn't get confused and thought you were trying to do this: num > (10 && num.odd?).
+      #Ruby's order of operator precedence considers > as higher precedence than &&
+      #You can chain as many expressions as you'd like with &&
+    2. ||: "or" operator, return if either one of evaluated object is true which is less strict than the && operator
+    3. Short Circuiting: the && and || operators exhibit a behavior that it will stop evaluating expressions once it can guarantee the return value
+      #false && 3/0 => false, no generate a ZeroDivisionError because the && operator didn't even evaluate the second expression
+      #since the first expression is false, it can short circuit and return false(Note that it will get an error by false || 3/0 => ZeroDivisionError)
+  Truthiness
+    - Ruby is a very liberal language and considers everything to be truthy other than false and nil.
+    - Any expression in a conditional, or with logical operators, and as long as it doesn't evaluate to false or nil, it is considered true. 
+        num = 5
+
+        if num
+          puts "valid number"
+        else
+          puts "error!"
+        end
+
+        #=> valid number
+    -  Everything in Ruby is considered "truthy" except for false and nil.
+
+Walk-through: Calculator
+  - My solution
+    puts "Give 1st number!"
+    num_1 = gets.chomp
+    puts "Give 2nd number!"
+    num_2 = gets.chomp
+    puts "Do you want to add, substract, multiply or divide?"
+    op = gets.chomp
+
+    case op
+    when "add"
+      puts num_1.to_i + num_2.to_i
+    when "substract"
+      puts num_1.to_i - num_2.to_i
+    when "multiply"
+      puts num_1.to_i * num_2.to_i
+    when "divide"
+      puts num_1.to_f / num_2.to_f
+    end
+
+Pseudo-Code
+  - is meant for humans to read so no rigid format to follow because human brains are far more flexible and powerful than programming language interpreters or compliers
+  - Two layers to solving any problems(frustrating to newbie so this is where pseudo-code comes into play)
+    1. The logical problem domain layers
+    2. The syntactical programming language layer
+  Formal Pseudo-Code and Translating Pseudo-Code to Program Code 
+    - Before we can take our pseudo-code and translate it to program code, we need to first formalize the pseudo-code
+    - Use below keyword to assist us
+        START:           start of the program
+        SET:             sets a variable we can use for later
+        GET:             retrieve input from user
+        PRINT:           displays output to user
+        READ:            retrieve value from variable
+        IF/ELSE IF/ELSE: show conditional branches in logic
+        WHILE:           show looping logic
+        END:             end of the program
+    - example about how pseudo-code apply
+      Given a collection of integers.
+
+      Iterate through the collection one by one.
+        - save the first value as the starting value.
+        - for each iteration, compare the saved value with the current value.
+        - if the saved value is greater, or it's the same
+          - move to the next value in the collection
+        - otherwise, if the current value is greater
+          - reassign the saved value as the current value
+
+      After iterating through the collection, return the saved value.
+
+    - pseudo-code
+      START
+
+      # Given a collection of integers called "number"
+
+      SET iterator = 1
+      SET saved_number = value within numbers collection at space 1
+
+      WHILE iterator <= length of numbers
+        SET current_number = value within numbers collection at space "iterator"
+        IF saved_number >= current_number
+          go to the next iteration
+        ELSE
+          saved_number = current_number
+
+        iterator = iterator + 1
+
+      PRINT saved_number
+
+      END
+
+    - program code
+      def find_greatest(numbers)
+        saved_number = nil
+
+        numbers.each do |num|
+          saved_number ||= num #assign to first value
+          if saved_number >= num
+            next
+          else
+            saved_number = num
+          end
+        end
+
+        saved_number
+      end
+  - For more sophisticated problems, we need to take a piecemeal approach to applying pseudo-code, then translating that to Ruby code to verify the logic is correct, then moving on to the next piece in the problem.
+  - example to write out pseudo-code(both casual and formal)
+    1. a method that returns the sum of two integers
+    #casual
+      - there are two values "number1" and "number2" which are both integers
+      - Make number1 adding number2 become a new number "sum"
+      - display the new number "sum"
+    #formal
+      START
+
+      SET number1 = integer
+      SET number2 = integer
+      SET sum = number1 + number2
+      PRINT sum
+
+      END
+    2. a method that takes an array of strings, and returns a string that is all those strings concatenated together
+    #casual
+      - there are several strings list in an array
+      - concatenated each array together to be a new sentence which is a string
+      - display new sentence
+    #formal
+      START
+
+      SET array = ["strings"]
+      SET sentence = concatenated array to be one string
+      PRINT sentence
+
+      END
+    3. a method that takes an array of integers, and returns a new array with every other element
+    #casual
+      - there are integers in an array
+      - adding other values into it to become a new array
+      - display new array
+    #formal
+      START
+
+      SET array = [intergers]
+      SET new_array = put other values into array
+      PRINT new_array
+
+      END
+
+Flowchart
+  - Using a flowchart helps us out the logical sequence of a possible solution in a visual way.
+  - refer to website for the diagram of flowchart
+  - This helps us map out the step-by-step logic, which is called the imperative or procedural way to solve a problem.
+  - A Larger Problem(when pseudo-code gets long, it becomes very hard to trust the accuracy of the logic)
+    - high level pseudo-code
+      while user wants to keep going
+        - ask the user for a collection of numbers
+        - extract the largest one from that collection and save it #it contains a lot logic in this line
+        - ask the user if they want to input another collection
+      return saved list of numbers
+    - full pseudo-code
+        while user wants to keep going
+        - ask the user for a collection of numbers
+        - iterate through the collection one by one.
+          - save the first value as the starting value
+          - for each iteration, compare the saved value with the current value
+          - if the saved value is greater, or it's the same
+            - move to the next value in the collection
+          - otherwise, if the current value is greater
+            - reassign the saved value as the current value
+
+        - after iterating through the collection, save the largest value into the list
+        - ask the user if they want to input another collection
+
+      return saved list of numbers
+    - formal pseudo-code
+      START
+
+      SET large_numbers = []
+      SET keep_going = true
+
+      WHILE keep_going == true
+        GET "enter a collection"
+        SET collection
+        SET largest_number = SUBPROCESS "extract the largest one from that collection"
+        large_number.push(largest_number)
+        GET "enter another collection?"
+        IF "yes"
+          keep_going = true
+        ELSE
+          keep_going = false
+        IF keep_going == false
+          exit the looping
+
+      PRINT large_numbers
+
+      END
+
+    - example of Calculator
+      # high level using declarative syntax
+        - Get the first number
+          - Make sure it's valid, otherwise, ask for another
+        - Get the second number
+          - Make sure it's valid, otherwise, ask for another
+        - Get the operator
+          - Make sure it's valid, otherwise, ask again
+
+        - Perform operation on the two numbers
+        - Display result
+        - Ask if user wants to do another calculation
+
+Rubocop
+  - a static code analyzer which analyze and offer advice about its style format as well as possible logical errors
+  - In Rubocop parlance, these rules are called cops. Cops are further grouped into departments.
+    1. Style Format(1st department)
+      - Coding style is a matter of opinion, Rubyists have settled on a set of conventions refer to a document called the Ruby Style Guide
+      - For example, if your code isn't indented with 2 spaces, the IndentationWidth cop will complain.
+    2. Code Linting
+      - a program that inserts your code for possible logical errors or code smells
+      - For example, if your code instantiates an unused local variable, the UselessAssignment cop will complain.
+  - Installation and Usage 
+    - rubocop -v => version 0.46.0 
+    - rubocop test.rb => run rubocop on test.rb file 
+  - Quick Tutorial
+    - C (convention), W (warning), E (error), and F (fatal error)
+    - file name:the line number:the column number, for example => test.rb:6:5: C: ...
+    - rubocop test.rb --format offenses => to find out which cop(department) complained
+  - Configuring Robocop
+    - how to ignore some of particular rules due to overly strict
+    - through a configuration file called .robocop.yml
