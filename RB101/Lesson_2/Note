@@ -385,4 +385,252 @@ Walk-through: Refactoring Calculator
 
     prompt("Goodbye! My Love!")
 
-    
+Rubocop Calculator
+  - After Rubocop fine tuning
+    def prompt(string)
+      puts "=> #{string}"
+    end
+
+    def valid_number?(num)
+      num.to_i != 0
+    end
+
+    def op_print(op)
+      case op
+      when '1'
+        'Adding'
+      when '2'
+        'Substracting'
+      when '3'
+        'Multiplying'
+      when '4'
+        'Dividing'
+      end
+    end
+
+    prompt('Welcome to Woolong Calculator!')
+
+    name = ''
+
+    loop do
+      prompt('What\'s your name?')
+      name = gets.chomp
+      break unless name.empty?
+      prompt('Hmm...please provide it...')
+    end
+
+    prompt("Hi! #{name}!!")
+
+    loop do
+      num1 = ''
+      loop do
+        prompt('Give 1st number!')
+        num1 = gets.chomp
+        break if valid_number?(num1)
+        prompt('It\'s not a valid number!')
+      end
+
+      num2 = ''
+      loop do
+        prompt('Give 2nd number!')
+        num2 = gets.chomp
+        break if valid_number?(num2)
+        prompt('It\'s not a valid number!')
+      end
+
+      op = ''
+      operator_prompt = <<-MSG
+      Do you want to add, substract, multiply or divide?
+          1) Add
+          2) Substract
+          3) Multiply
+          4) Divide
+      MSG
+
+      loop do
+        prompt(operator_prompt)
+        op = gets.chomp
+        break if %w(1 2 3 4).include?(op)
+        promp('Please check your option of operator!')
+      end
+
+      result = case op
+              when '1'
+                num1.to_i + num2.to_i
+              when '2'
+                num1.to_i - num2.to_i
+              when '3'
+                num1.to_i * num2.to_i
+              when '4'
+                num1.to_f / num2.to_f
+              end
+
+      prompt("#{op_print(op)} the two numbers...")
+      prompt("The result is #{result}!!")
+      prompt('Do you want to continue?(Y to continue calculating)')
+      answer = gets.chomp
+      break unless answer.downcase.start_with?('y')
+      prompt('Let\'s keep going!')   
+    end
+
+    prompt("Goodbye! My Love #{name}!")
+
+Debugging
+  - Dealing with feeling of frustration is the first critical aspect of learning to program
+  - Reading Error Messages
+    1. stack trace is critical in helping you firgure out where to start debugging.
+    2. Every language andd library has a certain pattern to their stack trace, so that the longer you work with a language or library, the easier it will become.
+  - Online Resources
+    1. Search Engine (remember to add 'Ruby' keyword)
+    2. Stack Overflow (a rich treasure trove of answers to common problems)
+    3. Documentation
+  - Steps to Debugging
+    1. Reproduce the Error
+    2. Determine the Boundaries of the Error
+    3. Trace the Code
+      - trapping the error means know the bug originating in the code from the error message
+    4. Understand the Problem Well
+      - check step by step for problematic code
+    5. Implement a Fix
+      - use rescue to bypass or suppress the possible error to implement a Fix
+      - One very important note is to fix one problem at a time
+    6. Test the Fix
+  - Techniques for Debugging
+    1. Line by line
+      - Patience and temperament first
+      - reading code line-by-line, word-by-word, character-by-character
+    2. Rubber Duck
+    3. Walking Away
+    4. Using Pry
+      - Pry is a powerful Rubu REPL that can replace IRB
+      - Use Pry by require "pry" and then insert binding.pry anywhere in the code and when Ruby gets to that line, execution will stop and we'll be able to inspect the state of our program at that point.
+      - Ctrl + D will continue execution of the program
+      - exit-program is to exit the program directly
+    5. Using a Debugger
+  
+Order of Precedence
+  - The order in which operators are evaluated called the order of precedence
+  - just like 3 + 5 * 7, * is higher level of precedence than + so execute 5 * 7 first
+  - another example
+    array = [1, 2, 3]
+    p array.map {|num| num + 1} # => [2, 3, 4]  #block has higher order of precedence
+    #If use do...end, the order of precedence is lower
+    p array.map do |num|
+      puts num           # outputs #<Enumerator: [1, 2, 3]:map>
+    end                  # => #<Enumerator: [1, 2, 3]:map>
+  - Two main takeaways here
+    1. Ruby evaluates expressions based on the level of precedence of the operators
+    2. To override the default, use parentheses
+  - Ruby's tap method
+    1. for validating
+    2. a debugging tool
+    3. object instance method
+    4. “tap into” a method chain to perform operations on intermediate results within the chain
+      - example 1
+        (1..10)                 .tap { |x| p x }   # 1..10
+         .to_a                  .tap { |x| p x }   # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+         .select {|x| x.even? } .tap { |x| p x }   # [2, 4, 6, 8, 10]
+         .map {|x| x*x }        .tap { |x| p x }   # [4, 16, 36, 64, 100]
+      - example 2
+          (1..10)                .tap {|x| puts "original: #{x.inspect}"}   # original: 1..10
+            .to_a                .tap {|x| puts "array: #{x.inspect}"}      # array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            .select {|x| x%2==0} .tap {|x| puts "evens: #{x.inspect}"}      # evens: [2, 4, 6, 8, 10]
+            .map {|x| x*x}       .tap {|x| puts "squares: #{x.inspect}"}    # [4, 16, 36, 64, 100]
+
+Assignment: Calculator Bonus Features
+  1. Better integer validation
+    Option 1
+      def interger?(input)
+        input.to_i.to_s == input
+      end
+    Option 2: use regex
+      def integer?(input)
+        /^\d+$/.match(input)
+      end
+    Option 3: use built-in conversion method
+      def integer?(input)
+        Integer(input) rescue false
+      end
+  2. Number validation
+    def number?(input)
+      integer?(input) || float?(input)
+    end
+    - inplement float? method
+      Option 1
+        def float?(input) #if string = '1.', to_f will conver it to 1.0 which does not match "1."
+          input.to_f.to_s == input
+        end
+      Option 2: use regex
+        def float?(input)
+          /\d/.match(input) && /^\d*\.?\d*$/.match(input)
+        end
+      Option 3: use the Kernel#Float
+        def float?(input)
+          Float(input) rescue false
+        end
+  3. operator_to_message(op_print in my solution)
+    - if we wanted to add code after the case statement, we would need to save the return value of the case into a variable
+    - make sure to return that variable, or that variable must be the last line in the method
+      def opertion_to_message(operation)
+        word = case operation
+                 when '1'
+                   'Adding'
+                 when '2'
+                   'Substracting'
+                 when '3'
+                   'Multiplying'
+                 when '4'
+                   'Dividing'
+               end
+        x = "A radom line of code"
+
+        word
+      end
+  4. Extracting messages in the program to a configuration file
+    - create YAML file first(test_message.yml)
+      welcome: "Welcome to Calculator! Enter your name:"
+      valid_name: "Make sure to enter a valid name."
+    - load YAML file(test.rb)
+      def prompt(string)
+        puts "=> #{string}"
+      end
+
+      require 'yaml'
+      MESSAGE = YAML.load_file('test_message.yml')
+      # => {"welcome"=>"Welcome to Calculator! Enter your name:", "valid_name"=>"Make sure to enter a valid name."}
+      puts MESSAGE.inspect # it is a hash expression in Ruby
+      prompt(MESSAGE['welcome'])
+      # => Welcome to Calculator! Enter your name:
+  5. Internationalize the messages
+    - modify YAML file
+      en:
+        welcome: "Welcome to Calculator! Enter your name:"
+        valid_name: "Make sure to enter a valid name."
+      es:
+        welcome: "Bienvenido a la calculadora! Entre su nombre:"
+        valid_name: "Asegúrese de entrar un nombre válido."
+    - refactoring the message
+      require 'yaml'
+      MESSAGE = YAML.load_file('test_message.yml') 
+      # => {"en"=>{"welcome"=>"Welcome to Calculator! Enter your name:", "valid_name"=>"Make sure to enter a valid name."}, "es"=>{"welcome"=>"Bienvenido a la calculadora! Entre su nombre:", "valid_name"=>"Asegúrese de entrar un nombre válido."}}
+
+      LANGUAGE = 'en'
+
+      def messages(message, lang = 'en')
+        MESSAGE[lang][message]
+      end
+
+      def prompt(string)
+        message = messages(string, LANGUAGE)
+        Kernel.puts("=> #{message}")
+      end
+
+      prompt('welcome')
+
+      def prompt_es(key)
+        message = messages(key, 'es')
+        puts "=> #{message}"
+      end
+
+      prompt_es('welcome')
+
