@@ -634,3 +634,447 @@ Assignment: Calculator Bonus Features
 
       prompt_es('welcome')
 
+Assignment: Mortgage / Car Loan Calculator
+  def prompt(msg)
+    puts "#{msg}"
+  end
+
+  prompt('=> Hello, welcome to Mortgage Calculator!')
+
+  name = ''
+  loop do
+    prompt('=> Please tell me your name.')
+    name = gets.chomp
+    if name.empty?
+      prompt('=> Hmm...please type your name.')
+    else
+      prompt("=> Thanks! #{name}")
+      break
+    end
+  end
+
+  prompt("=> Good Day! #{name}, there are few questions need your feedback!")
+
+  loop do
+    prompt('=> How much is your total mortgage?')
+    loan_amount = ''
+    loop do
+      loan_amount = gets.chomp
+      if loan_amount.empty? || loan_amount.to_f <= 0
+      prompt('=> Must enter positive number')
+      else
+        break
+      end
+    end
+    
+    prompt('=> How many percentage is the Annual Percentage Rate?')
+    prompt('(Example: 5 for 5% or 2.5 for 2.5%)')
+    apr = ''
+    loop do
+      apr = gets.chomp
+      if apr.empty? || apr.to_f <= 0
+      prompt('=> Must enter positive number')
+      else
+        break
+      end
+    end
+    
+    prompt('=> How many months is the duration of loan?')
+    loan_duration = ''
+    loop do
+      loan_duration = gets.chomp
+      if loan_duration.empty? || loan_duration.to_f <= 0
+      prompt('=> Must enter positive number')
+      else
+        break
+      end
+    end
+
+
+    p = loan_amount.to_f
+    j = apr.to_f / 12 / 100
+    n = loan_duration.to_f
+
+    m = p * (j / (1 - (1 + j)**(-n)))
+    monthly_payment = m.round(2).to_s
+
+    prompt("=> After calculation...you need to pay #{monthly_payment} dollars every month!")
+    prompt('Do you want to continue Mortgage Calculator?(Y to continue)')
+    answer = gets.chomp.downcase
+    break if answer != 'y'
+  end
+  prompt('=> Thank you for using Mortage Calculator, bye bye!')
+
+Coding Tips
+  - Dramatic Experience and Retaining Knowledge
+    => Debugging an issue for hours and hours will ensure that this problem gets burned into long term memory
+  - Naming things
+    => Try to develop a habit of thinking about how to name things descriptively
+  - Naming conventions
+    => Ruby is an unusual language in that you can create a variable with a capital letter, or a constant with CamelCase.
+    => Using Rubocop on your code will help you catch some of these issues
+  - Mutating Constants
+    => CONSTANTS should be immutable
+  - Methods
+    => Make sure that the method does one thing, and that its responsibility is very limited.
+    => Methods should be short, around 10 lines or so. If it's more than 15 lines long, it would probably be better to split it to 2 or 3 methods.
+    => Some guildlines to write good methods:
+      1. Don't display something to the output and return meaningful value
+      2. Decide whether the method should return a value with no side effects or perform side effects with no return value
+      3. In Ruby, we would not say return_total, it would be just total - returning a value is implied.
+    => If you fine yourself always looking at the method implementation, it's a sign that the method is not named appropriately, or that's it's doing more than one simple thing.
+  - Methods should be at the same level of abstraction
+    => When you read good code, the methods are all at the same abstraction
+      * deal()
+      * hit()
+      * stay()
+      * iterate_through_cards() => is not at the same abstraction level as the other methods
+  - Method names should refelct mutation
+    => Use naming conventions, even in your own code, to signify which types of methods mutate vs which methods return values.
+    => The less you have to remember, and the less other people have to remember while looking at your code, the better.
+    => Your goal should be to build small methods that are like LEGO blocks.
+    => As your narrative comes into more focus, the structure of your piece can become more organized and clean.
+  - Display Output
+    => One way to resolve this is to help yourself remember and prefix all methods that output values with something like print_, say_ or display_. 
+    => Remember that code not only has to work properly, but must also be read easily — both by others as well as your future self.
+  - Miscellaneous Tips
+    1. Don't prematurely exit the program 
+    2. Watch your indentation. 2 spaces, not tabs.
+    3. Name your methods from the perspective of using them later => The easier your code is to read, the easier it is to debug and maintain.
+    4. Know when to use a "do/while" vs a "while" loop
+  - Truthiness
+    => In Ruby, everything is truthly except nil and false
+  - Approach to learning
+    => You'll likely be revisiting old topics over and over, and, though dramatic experience, certain things will be burned into long term memory
+
+Variable Scope
+  - Constants, global variables, class variables, instance variables and local variables
+  - Only talk about local varaibles in this chapter
+  - Two majoy areas where we encounter local variable scoping rules are related to method definition and method invocation with a block
+  - Variables and Blocks
+    * One particular attribute of Ruby blocks: they create a new scope for local varaibles
+    * The scope created by a block following a method invocation as an inner scope and nested blocks will create nested scopes
+    * Variables initialized in an outer scope can be accessed in an inner scope, but not vice versa.
+      1. outer scope can be accessed by inner scope
+      2. inner scope variables cannot be accessed in outer scope
+      3. peer scopes do not conflict
+      4. nested block - follow the same rules of inner and outer scoped variables
+        -> first level, second level, third level...
+      5. variable shadowing - both outer and inner scope with the same name of local variables
+   - Variables and Method Definitions
+      * A method definition has no notion of "outer" or "inner" scope -- you must explicitly pass in any parameters to a method definition
+        1. a method definition can't access local varialbles in another scope
+        2. a method definition can access objects passed in
+  - Blocks within Method Definitions
+      * Unsurprisingly, the rules of scope for a method invocation with a block remain in full effect even if we're working inside a method definition.
+  - Constants
+    * In procedural style programming, contants behave like globals
+      -> constants are able to access globaly method definition, inner scope and outer scope
+
+More Variable Scope
+  - method definition(#def...)
+  - method invocation(#.times{}, #.each{}...)
+    * a block is part of the method invocation
+    * method invocation followed by curly brace or do...end is the way in which we define a block in Ruby
+    * Essentially the block acts as an argument to the method 
+    * "yield" keyword is what controls the interation with the block
+    * blocks and methods can interact with each other; the level of that interaction is set by the method definition and then used at method invocation
+    * when invoking a method with a block, we aren't just limited to executing code within the block; depending on the method definition, the method can use the return value of the block to perform some other action. 
+  - Summary
+    1. The def..end construction in Ruby is method definition
+    2. Referencing a method name, either of an existing method or subsequent to definition, is method invocation
+    3. Method invocation followed by{...} or do..end defines a block; the block is part of the method invocation
+    4. Method definition sets a scope for local variables in terms of parameters and interation with block
+    5. Method invocation uses the scope set by the method definition
+
+Pass by Reference vs Pass by Value
+  - What does pass by "value" mean?
+    * In C, when you "pass by value", the method only has a copy of the original object. Operations performed on the object within the method have no effect on the original object outside of the method
+    * Ruby is "pass by value" because re-assigning the object within the method doesn't affect the object outside the method
+      # Example:
+      def change_name(name)
+        name = 'bob'      # does this reassignment change the object outside the method?
+      end
+
+      name = 'jim'
+      change_name(name)
+      puts name           # => jim
+      # => It looks like it's by value, since re-assigning the variable only affected the method-level variable, and not the main scope variable.
+  - What does pass by "reference" mean?
+    * Below example implies that Ruby is "pass by reference",because operations within the method affected the original object
+      # Example 
+      def cap(str)
+        str.capitalize!   # does this affect the object outside the method?
+      end
+
+      name = "jim"
+      cap(name)
+      puts name           # => Jim
+      # Slightly modify the example
+      def cap(str)
+        str.capitalize
+      end
+
+      name = "jim"
+      cap(name)
+      puts name           # => jim
+      # => back in "pass by value" without "!"
+  - What Ruby does
+    * when an operation within the method mutates the caller, it will affect the original object
+    * Operations mutate the caller(for example: #capitalize/#capitalize!, Array#+/Array#<<)
+  - Variables as Pointers
+    * immutable object: numbers, booleans and nil...
+    * mutable object: most objects in Ruby are mutable
+    * Several Array method such as #delete, #fill and #insert mutate the original object without creating a new one
+    * Mental model: ruby appears to use pass by value for immutable objects, and pass by reference for mutable objects.
+  - Object Passing in Ruby - Pass by Reference or Pass by Value
+    * object passing
+      -> nearly everything is an object
+      -> a method with some expression as an argument is ultimately evaleated by ruby reduced to an object
+      -> the expression can be an object literal, a variable name or a complex expression; regardless, it is reduced to an object
+      -> Ruby then makes that object available inside the method called passing the object to the method
+    * loose use of the terminology of generality
+      - Objects can be literals, named objects (variables and constants), or complex expressions.
+      - Methods can include methods, blocks, procs, lambdas, and even operators.
+      - Arguments can include actual arguments, the caller of the method, operator operands, or a return value.
+    * strict evaluation: pass by value, pass by reference as object passing strategies
+      - A non-mutating method can use pass by reference as well, so pass by reference can be used with immutable objects.
+      - There may be a reference passed, but the reference isn’t a guarantee that the object can be modified.
+    * Pass By Reference Value
+      - it’s not uncommon to just say that ruby is pass by reference value, pass by reference of the value, or pass by value of the reference
+      - ruby passes around copies of the references.
+      - ruby is neither pass by value nor pass by reference, but instead employs a third strategy that blends the two strategies.
+  - Final Mental Model
+    * object passing strategy ruby uses:
+      1. pass by reference value is probably the most accurate answer, but it's hard to decide what will happen if a method modifies an argument - at least not until you fully understand it
+      2. pass by reference is accurate so long as you account for assignment and immutability
+      3. Ruby acts like pass by value for immutable objects, pass by reference for mutable objects is a reasonable answer when learning about ruby, so long as you keep in mind that ruby only appears to act like this
+    
+Walk-through: Rock Paper Scissors & Rubocop Rock Paper Scissors
+  - My game for Rock Paper Scissors
+    def prompt(message)
+      puts "=> #{message}"
+    end
+
+    def display_result(winner)
+      prompt("The winner is #{winner}!!!")
+    end
+
+    prompt('Welcome to ROCK/PAPER/SCISSORS game!!!')
+
+    name = ''
+    loop do
+      prompt('What is your name?')
+      name = gets.chomp
+      break unless name.empty?
+      prompt('Hmm...please type your name.')
+    end
+
+    prompt("Hello, #{name}. Please follow below instruction.")
+
+    loop do
+      user_choice = ''
+      loop do
+        prompt('Choose one: 1) Rock, 2) Paper or 3) Scissors!')
+        user_choice = gets.chomp
+        case user_choice
+        when '1'
+          prompt('User: Rock')
+          user_choice = 'Rock'
+          break
+        when '2'
+          prompt('User: Paper')
+          user_choice = 'Paper'
+          break
+        when '3'
+          prompt('User: Scissors')
+          user_choice = 'Scissors'
+          break
+        else
+          prompt('Please choose carefully...')
+        end
+      end
+
+      pc_choice = VALID_CHOICES.sample
+      prompt("CPU: #{pc_choice}")
+
+      if user_choice == pc_choice
+        prompt("It's a tie!!")
+      elsif (user_choice == 'Rock' && pc_choice == 'Scissors') || (user_choice == 'Paper' && pc_choice == 'Rock') || (user_choice == 'Scissors' && pc_choice == 'Paper')
+        display_result(name)
+      else
+        display_result('CPU')
+      end
+      prompt('Do you want to play again? Any key to continue, type q to exit.')
+      answer = gets.chomp.downcase
+      break if answer == 'q'
+      prompt("#{name}, let's go battle again!!")
+    end
+  - Refactoring after watching video & Rubocop
+    VALID_CVALID_CHOICES = %w(Rock Paper Scissors).freeze
+
+    def prompt(message)
+      puts "=> #{message}"
+    end
+
+    def result?(first, second)
+      (first == 'Rock' && second == 'Scissors') ||
+        (first == 'Paper' && second == 'Rock') ||
+        (first == 'Scissors' && second == 'Paper')
+    end
+
+    def display_result(player, computer)
+      if result?(player, computer)
+        prompt('You Won!!')
+      elsif result?(computer, player)
+        prompt('You lose!!')
+      else
+        prompt("It's a tie!!")
+      end
+    end
+
+    prompt('Welcome to ROCK/PAPER/SCISSORS game!!!')
+
+    name = ''
+    loop do
+      prompt('What is your name?')
+      name = gets.chomp
+      break unless name.empty?
+      prompt('Hmm...please type your name.')
+    end
+
+    prompt("Hello, #{name}. Please follow below instruction.")
+
+    loop do
+      user_choice = ''
+      loop do
+        prompt("Choose one: #{VALID_CHOICES.join(', ')}!")
+        user_choice = gets.chomp.capitalize!
+        if VALID_CHOICES.include?(user_choice)
+          prompt("Player: #{user_choice}")
+          break
+        else
+          prompt('Please type carefully...')
+        end
+      end
+
+      pc_choice = VALID_CHOICES.sample
+      prompt("CPU: #{pc_choice}")
+
+      display_result(user_choice, pc_choice)
+
+      prompt('Do you want to play again? Any key to continue, type q to exit.')
+      answer = gets.chomp.downcase
+      break if answer == 'q'
+      prompt("#{name}, let's go battle again!!")
+    end
+
+    prompt('Thank you for playing! Bye!!')
+
+Coding Tips 2
+  - Using new lines to organize code
+    * Making your code readable is of paramount importance, not only others, but for future self
+  - Should a method return or display?
+    * Understand if a method returns a value, or has side effects, or both
+    * in general, if a method has both side effects and meaningful return value, it's a red flag.
+  - Name methods appropriately
+    * If you ifne yourself contantly looking at a method's implementation every time you use it, it's a sign that the method needs to be improved.
+    * a method should do one thing and be named appropriately
+  - Don't mutate the caller during iteration
+    * Don't mutate a collection while iterating through it
+  - Variable shadowing
+    * If you pick a name that is identical to an outer scope varaiable, variable shadowing will prevent you from using the outer scope variable.
+    * Run Rubocop can catch this error for you.
+  - Don't use assignment in a conditional
+  - Use underscore for unused parameters
+    # Example 1
+      names = ['kim', 'joe', 'sam']
+      names.each { |_| puts "got a name!" }
+    # Example 2
+      names.each_with_index do|_, idx|
+        puts "#{idx+1}. got a name!"
+      end
+  - Gain experience through struggling
+    * two things that beginners feel at this stage:
+      1. want to know the "best" or "right" wat to do something, and want to learn the "best pratice"
+      2. too much time being wasted on debugging and not doing things correctly the first time
+    * spending the time programming
+    * learn to debug through problems, struggle with it, search for the right terms and play around with the code
+
+Assignment: RPS Bonus Features
+  VALID_CHOICES = {
+    r: 'Rock', p: 'Paper', sc: 'Scissors', sp: 'Spock', l: 'Lizard'
+  }.freeze
+
+  def prompt(message)
+    puts "=> #{message}"
+  end
+
+  def result?(first, second)
+    (first == 'Rock' && second == 'Scissors') ||
+      (first == 'Rock' && second == 'Lizard') ||
+      (first == 'Lizard' && second == 'Spock') ||
+      (first == 'Lizard' && second == 'Paper') ||
+      (first == 'Spock' && second == 'Scissors') ||
+      (first == 'Spock' && second == 'Rock') ||
+      (first == 'Scissors' && second == 'Paper') ||
+      (first == 'Scissors' && second == 'Lizard') ||
+      (first == 'Paper' && second == 'Rock') ||
+      (first == 'Paper' && second == 'Spock')
+  end
+
+  def display_result(player, computer)
+    if result?(player, computer)
+      prompt('You Won!!')
+    elsif result?(computer, player)
+      prompt('You lose!!')
+    else
+      prompt("It's a tie!!")
+    end
+  end
+
+  prompt('Welcome to RPSSL game!!!')
+
+  name = ''
+  loop do
+    prompt('What is your name?')
+    name = gets.chomp
+    break unless name.empty?
+    prompt('Hmm...please type your name.')
+  end
+
+  prompt("Hello, #{name}. Please follow below instruction.")
+  puts "-------------------------------------"
+  VALID_CHOICES.each { |k, v| puts "#{k}: #{v}" }
+  puts "-------------------------------------"
+  player_score = 0
+  computer_score = 0
+  loop do
+    user_choice = ''
+    loop do
+      prompt('Choose one: r, p, sc, sp or l')
+      user_choice = gets.chomp.downcase
+
+      if VALID_CHOICES.values.include?(VALID_CHOICES[user_choice.to_sym])
+        prompt("Player: #{VALID_CHOICES[user_choice.to_sym]}")
+        user_choice = VALID_CHOICES[user_choice.to_sym]
+        break
+      else
+        prompt('Please type carefully...')
+      end
+    end
+
+    pc_choice = VALID_CHOICES.values.sample
+    prompt("CPU: #{pc_choice}")
+
+    display_result(user_choice, pc_choice)
+    player_score += 1 if result?(user_choice, pc_choice)
+    computer_score += 1 if result?(pc_choice, user_choice)
+    prompt("Player : CPU = #{player_score} : #{computer_score}")
+    puts "-------------------------------------"
+
+    break if player_score == 5 || computer_score == 5
+  end
+
+  prompt('You WON!! Good job!!') if player_score == 5
+  prompt('You LOSE!! Try harder next time lol!!') if computer_score == 5
