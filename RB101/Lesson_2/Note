@@ -31,7 +31,7 @@ kick off
 A Note on Style
   Parentheses
     - Optional when you invoke a method
-    - To be more clear thile you're getting adjusted to reading Ruby, will always use paretheses whrn invoking a method in this lesson
+    - To be more clear thile you're getting adjusted to reading Ruby, will always use paretheses when invoking a method in this lesson
     - Example: gets().chomp() instead of gets.chomp
   puts and gets
     - display something: puts; ask the user for some input: gets
@@ -479,7 +479,7 @@ Debugging
   - Dealing with feeling of frustration is the first critical aspect of learning to program
   - Reading Error Messages
     1. stack trace is critical in helping you firgure out where to start debugging.
-    2. Every language andd library has a certain pattern to their stack trace, so that the longer you work with a language or library, the easier it will become.
+    2. Every language and library has a certain pattern to their stack trace, so that the longer you work with a language or library, the easier it will become.
   - Online Resources
     1. Search Engine (remember to add 'Ruby' keyword)
     2. Stack Overflow (a rich treasure trove of answers to common problems)
@@ -635,75 +635,7 @@ Assignment: Calculator Bonus Features
       prompt_es('welcome')
 
 Assignment: Mortgage / Car Loan Calculator
-  def prompt(msg)
-    puts "#{msg}"
-  end
-
-  prompt('=> Hello, welcome to Mortgage Calculator!')
-
-  name = ''
-  loop do
-    prompt('=> Please tell me your name.')
-    name = gets.chomp
-    if name.empty?
-      prompt('=> Hmm...please type your name.')
-    else
-      prompt("=> Thanks! #{name}")
-      break
-    end
-  end
-
-  prompt("=> Good Day! #{name}, there are few questions need your feedback!")
-
-  loop do
-    prompt('=> How much is your total mortgage?')
-    loan_amount = ''
-    loop do
-      loan_amount = gets.chomp
-      if loan_amount.empty? || loan_amount.to_f <= 0
-      prompt('=> Must enter positive number')
-      else
-        break
-      end
-    end
-    
-    prompt('=> How many percentage is the Annual Percentage Rate?')
-    prompt('(Example: 5 for 5% or 2.5 for 2.5%)')
-    apr = ''
-    loop do
-      apr = gets.chomp
-      if apr.empty? || apr.to_f <= 0
-      prompt('=> Must enter positive number')
-      else
-        break
-      end
-    end
-    
-    prompt('=> How many months is the duration of loan?')
-    loan_duration = ''
-    loop do
-      loan_duration = gets.chomp
-      if loan_duration.empty? || loan_duration.to_f <= 0
-      prompt('=> Must enter positive number')
-      else
-        break
-      end
-    end
-
-
-    p = loan_amount.to_f
-    j = apr.to_f / 12 / 100
-    n = loan_duration.to_f
-
-    m = p * (j / (1 - (1 + j)**(-n)))
-    monthly_payment = m.round(2).to_s
-
-    prompt("=> After calculation...you need to pay #{monthly_payment} dollars every month!")
-    prompt('Do you want to continue Mortgage Calculator?(Y to continue)')
-    answer = gets.chomp.downcase
-    break if answer != 'y'
-  end
-  prompt('=> Thank you for using Mortage Calculator, bye bye!')
+  refer to mortgage_claculator.rb
 
 Coding Tips
   - Dramatic Experience and Retaining Knowledge
@@ -1002,79 +934,4 @@ Coding Tips 2
     * learn to debug through problems, struggle with it, search for the right terms and play around with the code
 
 Assignment: RPS Bonus Features
-  VALID_CHOICES = {
-    r: 'Rock', p: 'Paper', sc: 'Scissors', sp: 'Spock', l: 'Lizard'
-  }.freeze
-
-  def prompt(message)
-    puts "=> #{message}"
-  end
-
-  def result?(first, second)
-    (first == 'Rock' && second == 'Scissors') ||
-      (first == 'Rock' && second == 'Lizard') ||
-      (first == 'Lizard' && second == 'Spock') ||
-      (first == 'Lizard' && second == 'Paper') ||
-      (first == 'Spock' && second == 'Scissors') ||
-      (first == 'Spock' && second == 'Rock') ||
-      (first == 'Scissors' && second == 'Paper') ||
-      (first == 'Scissors' && second == 'Lizard') ||
-      (first == 'Paper' && second == 'Rock') ||
-      (first == 'Paper' && second == 'Spock')
-  end
-
-  def display_result(player, computer)
-    if result?(player, computer)
-      prompt('You Won!!')
-    elsif result?(computer, player)
-      prompt('You lose!!')
-    else
-      prompt("It's a tie!!")
-    end
-  end
-
-  prompt('Welcome to RPSSL game!!!')
-
-  name = ''
-  loop do
-    prompt('What is your name?')
-    name = gets.chomp
-    break unless name.empty?
-    prompt('Hmm...please type your name.')
-  end
-
-  prompt("Hello, #{name}. Please follow below instruction.")
-  puts "-------------------------------------"
-  VALID_CHOICES.each { |k, v| puts "#{k}: #{v}" }
-  puts "-------------------------------------"
-  player_score = 0
-  computer_score = 0
-  loop do
-    user_choice = ''
-    loop do
-      prompt('Choose one: r, p, sc, sp or l')
-      user_choice = gets.chomp.downcase
-
-      if VALID_CHOICES.values.include?(VALID_CHOICES[user_choice.to_sym])
-        prompt("Player: #{VALID_CHOICES[user_choice.to_sym]}")
-        user_choice = VALID_CHOICES[user_choice.to_sym]
-        break
-      else
-        prompt('Please type carefully...')
-      end
-    end
-
-    pc_choice = VALID_CHOICES.values.sample
-    prompt("CPU: #{pc_choice}")
-
-    display_result(user_choice, pc_choice)
-    player_score += 1 if result?(user_choice, pc_choice)
-    computer_score += 1 if result?(pc_choice, user_choice)
-    prompt("Player : CPU = #{player_score} : #{computer_score}")
-    puts "-------------------------------------"
-
-    break if player_score == 5 || computer_score == 5
-  end
-
-  prompt('You WON!! Good job!!') if player_score == 5
-  prompt('You LOSE!! Try harder next time lol!!') if computer_score == 5
+  refer to rock_paper_scissors_spock_lizard.rb
