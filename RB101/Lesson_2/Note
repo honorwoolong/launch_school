@@ -635,8 +635,8 @@ Assignment: Calculator Bonus Features
       prompt_es('welcome')
 
 Assignment: Mortgage / Car Loan Calculator
-  refer to mortgage_claculator.rb
-
+  refer to mortgage_calculator.rb
+  
 Coding Tips
   - Dramatic Experience and Retaining Knowledge
     => Debugging an issue for hours and hours will ensure that this problem gets burned into long term memory
