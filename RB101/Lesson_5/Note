@@ -1,0 +1,319 @@
+Sorting
+  - Sorting is mostly performed on arrays
+  * What is Sorting?
+    -> Sorting is setting the order of the items in a collection according to a certain criterion.
+    -> Although it is possible to write looping code to perform sorting manually, this code would have to be fairly complex and is beyond the scope of what we're looking at in this lesson.
+    -> Ruby provides a couple of method that can do this complex work for us: sort and sort_by
+  * Comparison
+    -> Soring is essentially carried out by comparing the items in a collection with each other, and ordering them based on the result of that comparison.
+    -> Comparison is at the heart of how sorting works.
+    -> It uses a method to determine: <=> method(sometimes referred to as the "spaceship" operator).
+  * The <=> Method
+    -> Any object in a collection that we want to sort must implement a <=> method.
+    -> <=> performs comparison between two objects of the same type and returns a -1, 0, 1, depending on whether the first object is less than, equal to, or greater than the second object; if the two objects cannot be compared then nil is returned.
+    -> The return value of the <=> is used by sort to determine the order in which to place the items. If <=> returns nil to sort then it throws an argument error.
+    -> When using sort however, it is important to know how <=> performs comparison for the type of object that you want to sort; the place to check for that is in the documentation.
+    -> If you want to sort a collection that contains particular types of objects(e.g. strings or integers) you need to know two things:
+      1. Does that object type implement a <=> comparison method?
+      2. If yes, what is the specific implementation of that method for that object type(e.g. String#<=> will be implemented differently to Integer#<=>).
+    -> You can determine a string's ASCII position by calling ord on the string to determine string order with character;s position.
+      1. Uppercase letters come before lowercase letters
+      2. Digits and (most) punctuation come before letters
+      3. There is an extended ASCII table containing accented and other characters - this comes after the main ASCII table
+  * The sort method
+    - We can also call sort with a block that needs two arguments passed to it(the two items to be compared) and the return value of the block has to be -1, 0 ,1 or nil.
+    - examples
+    [2, 5, 3, 4, 1].sort do |a, b|
+      a <=> b
+    end
+    # => [1, 2, 3, 4, 5]
+
+    [2, 5, 3, 4, 1].sort do |a, b|
+      puts "a is #{a} and b is #{b}"
+      a <=> b
+    end
+    # a is 2 and b is 5
+    # a is 4 and b is 1
+    # a is 3 and b is 1
+    # a is 3 and b is 4
+    # a is 2 and b is 1
+    # a is 2 and b is 3
+    # a is 5 and b is 3
+    # a is 5 and b is 4
+    # => [1, 2, 3, 4, 5]
+
+    [2, 5, 3, 4, 1].sort do |a, b|
+      b <=> a
+    end
+    # => [5, 4, 3, 2, 1]
+    - String#<=> compares multi-character strings character by character
+    - Array#<=> each object in each array is compared in an element-wise manner; the first element of ary is compare with the first one of other ary using the <=> operator, then each of the second elements, etc...
+  * The sort_by method
+    - sort_by is similar to sort but is usually called with a block. The code in the block determines how the items are compared.
+    - examples: Using the character at index 1 of each string, so only the characters 'a', 'e' and 'o' are compared and the strings ordered according to the comparison of those character. The other characters in the string are ignored entirely.
+    ['cot', 'bed', 'mat'].sort_by do |word|
+      word[1]
+    end
+    # => ["mat", "bed", "cot"]
+    - If you did want to sort a hash however, calling sort_by on it would be a way to do so.
+    - When calling sort_by on a hash, two arguments need to be passed to the block - the key and the value.
+    - examples
+    people.sort_by do |_, age|
+      age
+    end
+    # => [[:Mike, 18], [:john, 25], [:Kate, 27]]
+    - sort_by always returns an array, even when called on a hash which we can convert this back into a hash by Array#to_h
+    - examples
+    people.sort_by do |name, _|
+      name.capitalize
+    end
+    # => [[:john, 25], [:Kate, 27], [:Mike, 18]]
+    - Array#sort! and Array#sort_by! are specific to arrays and are not available to hashes.
+  * Other methods which use comparison(Enumerable#: available to Array and Hash)
+    - min 
+    - max 
+    - minmax 
+    - min_by 
+    - max_by 
+    - minmax_by 
+  * Summary
+    1. Sorting is complex to carry out algorithmically on your own, but we can use the built-in sort and sort_by methods to do the complex work for us.
+    2. Comparison is at the heart of sorting. When sorting collections, you need to know if the objects you want to sort on implement a <=> method and how that method is defined.
+    3. Methods other than sort and sort_by also use comparison as the basis for how they work.
+Nested Data Structures
+  - Each inner array still has its own index even though they're both inside of an array
+  - Each inner array an be accessed in the same way that you'd access any other array element
+  * Updating collection elements
+    -> examples
+    arr = [[1, 3], [2]]
+    arr[0][1] = 5
+    arr # => [[1, 5], [2]]
+
+    arr = [[1], [2]]
+    arr[0] << 3
+    arr # => [[1, 3], [2]]
+  * Other nested structures
+    -> Hashes can be nested within an array as well
+    -> examples
+    arr = [{ a: 'ant' }, { b: 'bear' }]
+
+    arr[0][:c] = 'cat'
+    arr # => [{ :a => "ant", :c => "cat" }, { :b => "bear" }]
+    -> arrays can contain any type of Ruby object. This means that arrays can hold multiple different objects at the same time, including nested data structures.
+    -> examples
+    arr = [['a', ['b']], { b: 'bear', c: 'cat' }, 'cab']
+
+    arr[0]              # => ["a", ["b"]]
+    arr[0][1][0]        # => "b"
+    arr[1]              # => { :b => "bear", :c => "cat" }
+    arr[1][:b]          # => "bear"
+    arr[1][:b][0]       # => "b"
+    arr[2][2]           # => "b"
+  * Variable reference for nested collections
+    -> examples: The value of arr changed because a still points to the same Array object that's in arr. When we modified it by replacing 3 with 5, we were modifying the Array object.
+    a = [1, 3]
+    b = [2]
+    arr = [a, b]
+    arr # => [[1, 3], [2]]
+
+    a[1] = 5
+    arr # => [[1, 5], [2]]
+    arr[0][1] = 8
+    arr # => [[1, 8], [2]]
+    a   # => [1, 8]
+    -> It's really important to understand variables as pointers, as this is a key fundamental concept.
+  * Shallow Copy
+    -> Ruby provides two methods that let us copy an object, including collections: dup and clone
+    -> Both of these methods create a shallow copy of an object which means that only the object that the method is called on is copied.
+    -> If the object contains other objects - like a nested array - then those objects will be shared, not copied. This has major impact to nested collections.
+    -> examples: this happens is because the destructive methods were called on the object within the array rather than the array itself
+    arr1 = ["abc", "def"]
+    arr2 = arr1.clone
+    arr2[0].reverse!
+
+    arr2 # => ["cba", "def"]
+    arr1 # => ["cba", "def"]
+    -> examples: this method modifies the array, replacing each element of arr2 with a new value
+    arr1 = ["a", "b", "c"]
+    arr2 = arr1.dup
+    arr2.map! do |char|
+      char.upcase
+    end
+
+    arr1 # => ["a", "b", "c"]
+    arr2 # => ["A", "B", "C"]
+    ---------------------------
+    -> examples: the destructive String#upcase! method on each element of arr2 which is a reference to the object referenced by the corresponding element in arr1. It changed the Array elements, not the array.
+    arr1 = ["a", "b", "c"]
+    arr2 = arr1.dup
+    arr2.each do |char|
+      char.upcase!
+    end
+
+    arr1 # => ["A", "B", "C"]
+    arr2 # => ["A", "B", "C"]
+  * Freezing Objects
+    -> The main difference between dup and clone is that clone preserves the frozen state of the object
+    -> examples
+    arr1 = ["a", "b", "c"].freeze
+    arr2 = arr1.clone
+    arr2 << "d"
+    # => RuntimeError: can't modify frozen Array
+
+    arr1 = ["a", "b", "c"].freeze
+    arr2 = arr1.dup
+    arr2 << "d"
+
+    arr2 # => ["a", "b", "c", "d"]
+    arr1 # => ["a", "b", "c"]
+    -> In Ruby, objects can be frozen in order to prevent them from being modified.
+    -> Only mutable objects can be frozen because immutable objects, like integers, are already frozen.
+    -> freeze only freezes the object it's called on. If the object it's called on contains other objects, those objects won't be frozen.
+    -> examples: a nested array the nested objects can still be modified after calling freeze
+    arr = [[1], [2], [3]].freeze
+    arr[2] << 4
+    arr # => [[1], [2], [3, 4]]
+    -> examples: this is also applies to strings within an array which modified the string, not array itself
+    arr = ["a", "b", "c"].freeze
+    arr[2] << "d"
+    arr # => ["a", "b", "cd"]
+  * Deep Copy
+    -> no built-in or easy way to create a deep copy or deep freeze objects within objects in Ruby
+    -> When working with collections, especially nested collections, one of the key things to be aware of is the level within the collection at which you are working.
+Working with Blocks
+  1. What is the type of action being performed (method call, block, conditional, etc...)?
+  2. What is the object that action is being performed on?
+  3. What is the side-effect of that action (e.g. output or destructive action)?
+  4. What is the return value of that action?
+  5. Is the return value used by whatever instigated the action?
+  * Example 7: Sorting nested data structures
+    Two sets of comparison happening:
+    1. Each of the inner arrays is compared with the other inner arrays.
+    2. The way those arrays are compared is by comparing the elements within them(the ducumentation refers to this as comparing in an 'element-wise' manner)
+    arr = [['1', '8', '11'], ['2', '6', '13'], ['2', '12', '15'], ['1', '8', '9']]
+    Because the elements in the arrays are strings, by calling sort it is string order which will ultimately determine array order:
+    arr.sort # => [["1", "8", "11"], ["1", "8", "9"], ["2", "12", "15"], ["2", "6", "13"]]
+    In order to achieve this we have to perform some transformation on the inner arrays prior to comparing them.
+    arr.sort_by do |sub_arr|
+      sub_arr.map do |num|
+        num.to_i
+      end
+    end
+    # => [["1", "8", "9"], ["1", "8", "11"], ["2", "6", "13"], ["2", "12", "15"]]
+  * Example 8: work with different objects in a nested array
+    [[8, 13, 27], ['apple', 'banana', 'cantaloupe']].map do |arr|
+      arr.select do |item|
+        if item.to_s.to_i == item    # if it's an integer
+          item > 13
+        else
+          item.size < 6
+        end
+      end
+    end
+    # => [[27], ["apple"]]
+  * Example 9: triple-level nested array
+    [[[1], [2], [3], [4]], [['a'], ['b'], ['c']]].map do |element1|
+      element1.each do |element2|
+        element2.partition do |element3|
+          element3.size > 0
+        end
+      end
+    end
+    # => [[[1], [2], [3], [4]], [["a"], ["b"], ["c"]]]
+    By looking at the example, you should notice the first method call within map is each. If we understand each, we know that it doesn't care about the block's return value and it always returns the calling object.
+  * Example 10: data structure of nested arrays and we want to increment every number by 1 without changing the data structure
+    [[[1, 2], [3, 4]], [5, 6]].map do |arr|
+      arr.map do |el|
+        if el.to_s.size == 1    # it's an integer
+          el + 1
+        else                    # it's an array
+          el.map do |n|
+            n + 1
+          end
+        end
+      end
+    end
+  * Mutating Collections While Iterating
+    "Do not mutate the collection that you're iterating through."
+    "One way you could fix the code above is to create a shallow copy of the array and iterate through it while mutating the original array."
+  * Summary
+    1. If at first code appears opaque or complex, take the time to break it down step by step.
+    2. If necessary use some sort of systematic approach (such as the tabular method outlined in this assignment).
+    3. Figure out what is happening at each step, playing particular attention to:
+      - Return value
+      - Side effect
+    4. Pay attention to the return values of all statements in your code, especially where implicit return values are being relied on.
+    5. Make sure you have a clear understanding of the underlying concepts such as data structure, loops, iterative methods and the blocks passed to them (go back over earlier assignments if necessary).
+    6. Be clear about the methdod implementation of the iterative method(s) being used, especially:
+      - What values are passed to the block
+      - What the method does with the return value of the block
+    7. If you are unclear about a method implementation, a good initial step is to refer to the Ruby Docs.
+Practice Problems: Sorting, Nested Collections and Working with Blocks
+  Practice Problem 1
+    arr = ['10', '11', '9', '7', '8']
+    arr.sort { |a, b| b.to_i <=> a.to_i }
+  Practice Problem 2
+    books = [
+      {title: 'One Hundred Years of Solitude', author: 'Gabriel Garcia Marquez', published: '1967'},
+      {title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', published: '1925'},
+      {title: 'War and Peace', author: 'Leo Tolstoy', published: '1869'},
+      {title: 'Ulysses', author: 'James Joyce', published: '1922'}
+    ]
+    books.sort_by do |book|
+      book[:published].to_i
+    end
+  Practice Problem 3
+    arr1 = ['a', 'b', ['c', ['d', 'e', 'f', 'g']]]
+    arr1[2][1][3] == 'g'
+    arr2 = [{first: ['a', 'b', 'c'], second: ['d', 'e', 'f']}, {third: ['g', 'h', 'i']}]
+    arr2[1][:third][0] == 'g'
+    arr3 = [['abc'], ['def'], {third: ['ghi']}]
+    arr3[2][:third][0][0] == 'g'
+    hsh1 = {'a' => ['d', 'e'], 'b' => ['f', 'g'], 'c' => ['h', 'i']}
+    hsh1['b'][1] == 'g'
+    hsh2 = {first: {'d' => 3}, second: {'e' => 2, 'f' => 1}, third: {'g' => 0}}
+    hsh2[:third].key(0) == 'g'
+  Practice Problem 4
+    arr1 = [1, [2, 3], 4]
+    arr1[1][1] = 4
+    arr2 = [{a: 1}, {b: 2, c: [7, 6, 5], d: 4}, 3]
+    arr2[2] = 4
+    hsh1 = {first: [1, 2, [3]]}
+    hsh1[:first][2][0] = 4
+    hsh2 = {['a'] => {a: ['1', :two, 3], b: 4}, 'b' => 5}
+    hsh2[['a']][:a][2] = 4
+  Practice Problem 5
+    munsters = {
+      "Herman" => { "age" => 32, "gender" => "male" },
+      "Lily" => { "age" => 30, "gender" => "female" },
+      "Grandpa" => { "age" => 402, "gender" => "male" },
+      "Eddie" => { "age" => 10, "gender" => "male" },
+      "Marilyn" => { "age" => 23, "gender" => "female"}
+    }
+    total_age = 0
+    munsters.each do |key, value|
+      total_age += value['age'] if value['gender'] == 'male'
+    end
+    p total_age
+  Practice Problem 6
+    munsters = {
+      "Herman" => { "age" => 32, "gender" => "male" },
+      "Lily" => { "age" => 30, "gender" => "female" },
+      "Grandpa" => { "age" => 402, "gender" => "male" },
+      "Eddie" => { "age" => 10, "gender" => "male" },
+      "Marilyn" => { "age" => 23, "gender" => "female"}
+    }
+    munsters.each do |name, detail|
+      puts "#{name} is a #{detail['age']}-year-old (#{detail['gender']})"
+    end
+  Practice Problem 7
+    a = 2
+    b = [5, 8]
+    arr = [a, b]
+
+    arr[0] += 2 # Modifying the array, arr not "a"
+    arr[1][0] -= a # Modifying the array "b" by assigning a new value at index 0
+    arr # => [4, [3, 8]]
+    # a = 2, b = [3, 8]
+  Practice Problem 8
+  

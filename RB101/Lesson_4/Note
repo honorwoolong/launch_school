@@ -1,0 +1,381 @@
+Collection Basics
+  * Element Reference
+    - String Element Reference
+      1. an integer-based index
+      2. the index starts counting at zero and increments by one for the remaining index values.
+      3. reference a specific character using the index ig. string[index, length] or String#slice
+      4. reference multiple characters within a string by using an index starting poing and the number of characters to return.
+      5. when we call a method, then we can use method chaining to call another method on the return value.
+    - Array Element Reference
+      1. arrays are lists of elements that are ordered by index , where each element can be any object
+      2. an integer-based index to maintain the order of its elements ig. array[index, length] or Array#slice
+      3. One key distinction is that String#slice returns a new string whereas Array#slice returns a new array.
+      4. Array#slice does not return a new array is if we pass the method only an index, rather than a start and length or a range; in this case the element at that index is returned rather than a new array.
+    - Hash Element Reference
+      1. instead of using  an integer-based index, uses key-value pairs, where the key or the value can be any type of Ruby object
+      2. the keys must be unique
+      3. values can be duplicated
+      4. We can access just the keys or just the values from a hash with the #keys nad #values methods of Hash
+      5. Symbols in Ruby can be thought of as immutable strings.
+    - Element Reference Gotchas
+      1. Out of Bounds Indices
+        ~ referencing an out-of-bounds index returns nil
+        ~ #fetch tries to return the element at position index, but throws an IndexError exception if the referenced index lies outside of the array bounds.
+        ~ it's better to use #fetch than use #[] since it enforces the array boundaries
+      2. Negative Indices
+        ~ Elements in String and Array objects can be referenced using negative indices, starting from the last index in the collection -1 and working backwards.
+      3. Invalid Hash Keys
+        ~ Hash also has a #fetch method which can be useful when trying to disambiguate valid hash keys with a nil value from invalid hash keys.
+  * Conversion
+    - conversion includes String#chars and Array#join
+    - String#chars returns an array of individual characters.
+    - Array#join returns a string with the elements of the array joined together.
+    - Hash has a #to_a method, which returns an array. Notice the array that is returned from #to_a contains arrays, each sub-array containing a symbol and a string.
+    - Just like Hash has a #to_a method, Array has a #to_h method. 
+  * Element Assignment
+    - String Element Assignment 
+      1. We can use the element assignment notation of String in order to change the value of a specific character within a string by referring to its index.
+      2. this way of modifying a string is a destructive action
+    - Array Element Assignment
+      1. we can assign individual characters in a string using their index by the same way
+    - Hash Element Assignment
+      1. Hash element assignment is not too dissimilar. The hash key is used instead of assigning a value using an index.
+
+Looping
+  * Controlling a Loop
+    1. Iteration
+      - If we want loop to iterate more than once, we can use a conditional statement so that break is only called when a specific condition occurs.
+      - We can tell loop to iterate a specific number of times by using a variable that tracks the number of iterations performed. Before loop is implemented, let's assign a variable counter that represents the current iteration number.
+    2. Break Placement
+      - With a "do/while" loop, the code within the block is guaranteed to execute at least once.
+      - If we move break to the first line within the loop, this will then mimic the behavior of a while loop. The while keyword always precedes a condition.
+    3. Next
+      - Ruby also provides the next keyword to help us control loops.
+      - When next is executed, it tells the loop to skip the rest of the current iteration and begin the next one. 
+      - Notice that when we added next, we also had to move counter += 1 so that it's executed first or it will result in an infinite loop.
+  * Iterating Over Collections
+    1. String
+      - To print a specific character in a string, we use the index value associated with the specific character.
+      - Since strings can only contain characters, we know that a space is also a character. If the string was 'a b c' for example, each character would be printed, including the spaces.
+    2. Array
+      - To iterate over an array, we can use loop in the same way we did with a string.
+    3. Hash
+      - Using loop to iterate over a hash is a bit more difficult -- it requires a couple more steps.
+      - hashes use key-value pairs instead of a zero-based index. 
+
+Introdution to PEDAC process
+  One approach to solving programming problems
+  * P: [Understand the] Problem
+    1. Read the problem description.
+    2. Check the test cases, if any.
+    3. If any part of the problem is unclear, ask the interviewer or problem requester to clarify the matter.
+  * E: Examples / Test cases
+  * D: Data Structure
+    1. Data structure influence your algorithm, so data structure and algorithm are often paired.
+    2. use cases for arrays and hashes are generally easy to identify for instance.
+  * A: Algorithm
+    1. The biggest problem that student have when writing algorithms is providing sufficient detail.
+    2. Designing the right algorithm is far more challenging.
+    3. need to indicate what is the hardest part of this problem
+  * C: Code
+
+  Pseudocode:
+  # input: a string
+  # output: an array of substrings
+  # rules: palindrome words should be case sensitive, meaning "abBA"
+  #        is not a palindrome
+
+  # Algorithm:
+  #  substrings method
+  #  =================
+  #  - create an empty array called `result` which will contain all
+  #    the required substrings
+  #  - initialize variable start_substring_idx and assign 0 to it.
+  #  - initialize variable end_substring_idx and assign value of
+  #    start_substring_idx + 1 to it.
+  #  - Enter loop which will break when start_substring_idx is equal
+  #      to str.size
+  #    - Within that loop enter another loop which will break if
+  #      end_substring_idx is equal to str.size
+  #      - append to the result array part of the string from
+  #        start_substring_idx to end_substring_idx
+  #      - increment `end_substring_idx` by 1.
+  #    - end the inner loop
+  #    - increment `start_substring_idx` by 1.
+  #    - reassign `end_substring_idx` to `start_substring_idx += 1`
+  #  - end outer loop
+  #  - return `result` array
+
+  #  is_palindrome? method
+  #  =====================
+  #  - check whether the string value is equal to its reversed
+  #    value. You can use the String#reverse method.
+
+  #  palindrome_substrings method
+  #  ============================
+  #  - initialize a result variable to an empty array
+  #  - create an array named substring_arr that contains all of the
+  #    substrings of the input string that are at least 2 characters long.
+  #  - loop through the words in the substring_arr array.
+  #    - if the word is a palindrome, append it to the result
+  #      array
+  #  - return the result array
+
+  Example: 
+  def substring(str)
+    start_substring_idx = 0
+    end_substring_idx = start_substring_idx + 1
+    result = []
+    loop do
+      break if start_substring_idx == str.size
+      loop do
+        break if end_substring_idx == str.size
+        result << str[start_substring_idx..end_substring_idx]
+        end_substring_idx += 1
+      end
+    start_substring_idx += 1
+    end_substring_idx = start_substring_idx + 1
+    end
+    result
+  end
+
+  def is_palindrome?(str)
+    str == str.reverse
+  end
+
+  def palindrome_substring(str)
+    result = []
+    substring_arr = substring(str)
+    substring_arr.each do |element|
+      result << element if is_palindrome?(element)
+    end
+    result
+  end
+
+  Another way to code substring method:
+    def substrings(str)
+      result = []
+      0.upto(str.size - 2).each do |start_idx|
+        (start_idx + 1).upto (str.size - 1) do |end_idx|
+          result << str[start_idx..end_idx]
+        end
+      end
+      result
+    end
+
+Selection and Transformation
+  - Selection is picking certain elements out of the collection depending on some criterion.
+  - Transformation, on the other hand, refers to manipulating every element in the collection.
+  * Looping to Select and Transform
+    -> When performing transformation, it's always important to pay attention to whether the original collection was mutated or if a new collection was returned.
+  * Extracting to Methods
+    -> When our method is done iterating over the collection it returns a new collection containing the selected values.
+    -> Example:
+      produce = {
+        'apple' => 'Fruit',
+        'carrot' => 'Vegetable',
+        'pear' => 'Fruit',
+        'broccoli' => 'Vegetable'
+      }
+
+      def select_fruit(hash)
+        product_apple = {}
+        counter = 0
+        loop do
+        current_key = hash.keys[counter]
+        current_value = hash[current_key]
+          if hash[current_key] == 'Fruit'
+            product_apple[current_key] = current_value
+          end
+          counter += 1
+          break if counter == hash.keys.size
+        end
+        product_apple
+      end
+    -> Example:
+      def double_numbers(numbers)
+        doubled_numbers = []
+        counter = 0
+
+        loop do
+          break if counter == numbers.size
+
+          current_number = numbers[counter]
+          doubled_numbers << current_number * 2
+
+          counter += 1
+        end
+
+        doubled_numbers
+      end
+    -> Example:
+      def double_numbers!(numbers)
+        counter = 0
+
+        loop do
+          break if counter == numbers.size
+
+          current_number = numbers.shift
+          numbers << current_number * 2
+
+          counter += 1
+        end
+
+        numbers
+      end
+
+      my_numbers = [1, 4, 3, 7, 2, 6]
+      p double_numbers!(my_numbers)
+      p my_numbers
+  * More Flexible Methods
+    -> By defining our methods in such a way that we can pass in additional arguments to alter the logic of the iteration, we can create more flexible and generic methods.
+
+Methods
+  * each: iterating over a collection
+    - functionally equivalent to using loop and represents a simpler way of accomplishing the same task.
+    - each is a method that's being called on the array
+    - The method takes a block, which is the do ... end part
+    - The code within the block is executed for each iteration.
+    - each send the value of the current element to the block in the form of an argument
+    - each knows that there's only one element per iteration, so each sends the block only one argument
+    - Hashes, need two arguments in order to represent both the keat and the value per iteration
+    - Once each is done iterating, it returns the original collection
+  * select
+    - arrays and hashes have a built-in way to iterate over a collection and perform Selection
+    - select evaluates the return value of the block
+    - When evaluating the block's return value, select only cares about its truthiness
+    - When an element is selected, it's placed in a new collection
+    - Once select is done iterating, it returns a new collection containing all of the selected elements, because the selection criteria -- the block's return value -- is truthy for every element in the array.
+    - if we place the statement puts on the last line within the block, select won't select any elements because the return value will always be falsey by puts always returns nil
+  * map
+    - Similar to select, map also considers the return value of the block
+    - map uses the return value of the block to perform transformation instead of selection
+    - map always performs transformation based on the return value of the block
+    - if we place the statement puts on the last line within the block, map doesn't care about truthiness, and takes this return value as the transformation criteria
+    - if the only statement within the block is a string, the return value of the block is the string which map will use as the transformation criteria.
+
+More Methods
+  - In Ruby Array and Hash includes the Enumerable module
+  * Enumerable#any?
+    -> Two return value of the block: the return value of the method and the return value of the block.
+    -> If the block returns a "truthy" value for any element in the collection, then the method will return true.
+  * Enumerable#all?
+    -> all? functions in a similar way to any?
+    -> the method only returns true if the block's return value in every iteration is truthy.
+  * Enumerable#each_with_index
+    -> each_with_index is nearly identical to each
+    -> each_with_index takes a second argument which represents the index of each element
+    -> When calling each_with_index on a hash, the first argument now represents an array containing both the key and the value
+    -> each, each_with_index always returns the original calling collection
+  * Enumerable#each_with_object
+    -> add a method argument, which is a collection object that will be returned by the method
+    -> first block argument represents the current element and the second block argument represents the collection object that was passed in as an argument to the method
+    -> once it's done iterating, the method returns the collection object that was passed in
+    -> similar to each_with_index, the first block argument turns into an array when we invoke each_with_object on a hash
+    -> As an additional quirk, it's possible to use parentheses to capture the key and value in the first block argument.
+  * Enumerable#first
+    -> no take a block but it does take an optional argument which represents the number of elements to return
+    -> When no argument is given, it returns only the first element in the collection
+    -> When an argument is provided, first will return the speicified number of elements
+    -> hashes are typically thought of as unordered and values are retrieved by keys. Calling first on a hash doesn't quite make sense, but Ruby lets you do it.
+    -> the return value of calling first on a hash with a numeric argument is a nested array which need to be back to hash by .to_h
+  * Enumerable#include?
+    -> no take a block but it does require one argument
+    -> when called on a hash, include? only checks the keys, not the values
+    -> Hash#include? is essentially an alias for Hash#key? or Hash#has_key?
+    -> Hash#value? or Hash#has_value? to find out if a value exists within a hash
+  * Enumerable#partition
+    -> partition divides up elements in the current collection into two collections, depending on the block's return value.
+    -> The return value is a nested array, with the inner arrays separated based on the return value of the block.
+    -> The most idiomatic way wo use partition is to parallel assign variables to capture the divided inner arrays
+    -> Even if the collection is a hash, the return value of partition will always be an array
+
+Practice Problems: Addtional Practice
+  * Practice Problem 1
+    flintstones = ["Fred", "Barney", "Wilma", "Betty", "Pebbles", "BamBam"]
+    hash = {}
+    flintstones.each_with_index do |value, index|
+      hash[value] = index
+    end
+
+    hash
+  * Practice Problem 2
+    ages = { "Herman" => 32, "Lily" => 30, "Grandpa" => 5843, "Eddie" => 10, "Marilyn" => 22, "Spot" => 237 }
+    total_ages = 0
+    ages.each{ |_, ages| total_ages += ages }
+    p total_ages
+    - another solution
+    p ages.values.inject(:+)
+  * Practice Problem 3
+    ages = { "Herman" => 32, "Lily" => 30, "Grandpa" => 402, "Eddie" => 10 }
+    ages.delete_if { |_, ages| ages > 100 }
+    p ages
+    - another solution
+    ages.keep_if { |_, ages| ages < 100 }
+  * Practice Problem 4
+    ages = { "Herman" => 32, "Lily" => 30, "Grandpa" => 5843, "Eddie" => 10, "Marilyn" => 22, "Spot" => 237 }
+    ages.select { |_, age| age == ages.values.min }
+  * Practice Problem 5
+    flintstones = %w(Fred Barney Wilma Betty BamBam Pebbles)
+    flintstones.index { |value| value.start_with?('Be') }
+    flintstones.index { |name| name[0, 2] == "Be" }
+  * Practice Problem 6
+    flintstones = %w(Fred Barney Wilma Betty BamBam Pebbles)
+    flintstones.map! { |name| name[0, 3] }
+  * Practice Problem 7
+    statement = "The Flintstones Rock"
+    result = {}
+    letters = ('A'..'Z').to_a + ('a'..'z').to_a
+    letters.each do |letter|
+      letter_frequency = statement.scan(letter).count
+      result[letter] = letter_frequency if letter_frequency > 0
+    end
+  * Practice Problem 8
+    numbers = [1, 2, 3, 4]
+    numbers.each do |number|
+      p number
+      numbers.shift(1)
+    end
+    1
+    3
+    => [3, 4]
+        numbers = [1, 2, 3, 4]
+        numbers.each do |number|
+          p number
+          numbers.pop(1)
+        end
+        1
+        2
+        => [1, 2]
+  * Practice Problem 9
+    words.split.map{|word| word.capitalize}.join(' ')
+  * Practice Problem 10
+    munsters = {
+      "Herman" => { "age" => 32, "gender" => "male" },
+      "Lily" => { "age" => 30, "gender" => "female" },
+      "Grandpa" => { "age" => 402, "gender" => "male" },
+      "Eddie" => { "age" => 10, "gender" => "male" },
+      "Marilyn" => { "age" => 23, "gender" => "female"}
+    }
+
+    munsters.each_value do |value|
+      case value["age"]
+      when 0..17
+        value["age_group"] = "kid"
+      when 18..64
+        value["age_group"] = "adult"
+      else
+        value["age_group"] = "senior"
+      end
+    end
+
+Summary
+  * Some of the most commonly used iterative methods are each, select, and map. It's important to understand the difference between these methods
+  * Methods called on Ruby collection objects are often used with a block; the return value of the block is passed back to the method on each iteration. It is important to be aware of:
+    - What the method does with the block's return value
+    - What the ultimate return value of the method is
+    - Any side-effects that the code in the block may have
+  * Ruby provides a lot of other useful methods for working with collections. It's not necessary to memorize them all at this stage buy you should:
+    - Be aware that they exist and know where to look for them
+    - Know how to read the documentation in order to understand the method's return value, how it uses the block's return value(if it takes a block), and whether the method is destructive.
+    
