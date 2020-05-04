@@ -316,4 +316,103 @@ Practice Problems: Sorting, Nested Collections and Working with Blocks
     arr # => [4, [3, 8]]
     # a = 2, b = [3, 8]
   Practice Problem 8
-  
+    hsh = {first: ['the', 'quick'], second: ['brown', 'fox'], third: ['jumped'], fourth: ['over', 'the', 'lazy', 'dog']}
+    vowels = 'aeiou'
+    hsh.each do |_, v|
+      v.each do |str|
+        str.chars.each do |char|
+          puts char if vowels.include?(char)
+        end
+      end
+    end
+  Practice Problem 9
+    arr.map { |sub| sub.sort { |a, b| b <=> a } }
+  Practice Problem 10
+    arr = [{a: 1}, {b: 2, c: 3}, {d: 4, e: 5, f: 6}]
+    arr.map do |hash|
+      hash2 = {}
+      hash.each do |k, v|
+        hash2[k] = v + 1
+      end
+      hash2
+    end
+  Practice Problem 11
+    arr = [[2], [3, 5, 7], [9], [11, 13, 15]]
+    arr.map do |sub|
+      sub.select do |num|
+        num % 3 == 0
+      end
+    end
+  Practice Problem 12
+    arr = [[:a, 1], ['b', 'two'], ['sea', {c: 3}], [{a: 1, b: 2, c: 3, d: 4}, 'D']]
+    arr.each_with_object ({}) do |sub_arr, hsh|
+      hsh[sub_arr[0]] = sub_arr[1]
+    end
+  Practice Problem 13
+    arr = [[1, 6, 7], [1, 4, 9], [1, 8, 3]]
+    arr.sort_by do |sub_arr|
+      sub_arr.select do |element|
+        element.odd?
+      end
+    end
+  Practice Problem 14
+    hsh = {
+      'grape' => {type: 'fruit', colors: ['red', 'green'], size: 'small'},
+      'carrot' => {type: 'vegetable', colors: ['orange'], size: 'medium'},
+      'apple' => {type: 'fruit', colors: ['red', 'green'], size: 'medium'},
+      'apricot' => {type: 'fruit', colors: ['orange'], size: 'medium'},
+      'marrow' => {type: 'vegetable', colors: ['green'], size: 'large'},
+    }
+    arr = []
+    hsh.each do |_, details|
+      arr << details[:colors].map{ |color| color.capitalize } if details[:type] == 'fruit'
+      arr << details[:size].upcase if details[:type] == 'vegetable'
+      arr
+    end
+  Practice Problem 15
+    arr = [{a: [1, 2, 3]}, {b: [2, 4, 6], c: [3, 6], d: [4]}, {e: [8], f: [6, 10]}]
+    arr.select do |hsh|
+      hsh.all? do |_, v|
+        v.all? do |num|
+          num.even?
+        end
+      end
+    end
+  Practice Problem 16
+    - My Solution
+    def print_UUID
+      seq_num = ('0'..'9').to_a + ('a'..'f').to_a
+      uuid = ''
+      loop do
+        uuid << seq_num.sample until uuid.size == 8
+        uuid << '-'
+        uuid << seq_num.sample until uuid.size == 13
+        uuid << '-'
+        uuid << seq_num.sample until uuid.size == 18
+        uuid << '-'
+        uuid << seq_num.sample until uuid.size == 23
+        uuid << '-'
+        uuid << seq_num.sample until uuid.size == 36
+        break
+      end
+      uuid
+    end
+    - LS Solution
+    def print_UUID
+      seq_num = ('0'..'9').to_a + ('a'..'f').to_a
+      uuid = ''
+      sections = [8, 4, 4, 4, 12]
+      sections.each_with_index do |section, index|
+        section.times { uuid << seq_num.sample }
+        uuid << '-' unless index >= sections.size - 1
+      end
+      uuid
+    end
+Summary
+  1. You should know how to reference items within nested collections in order to manipulate them
+  2. You should be aware that when you make a copy of a collection object that it is a shallow copy - the objects within the collections are shared between the ocpy and the original
+  3. When working with blocks, especially when using nested collections:
+    - Take the time to break down and understand the structure of a collection
+    - Choose an appropriate method and be clear on its implementation and return value
+    - Understand what is being returned by the various methods and block's at each level. When iterating through nested collectins, be particularly aware of the return value of the block and any side effects of the code within the block.
+    

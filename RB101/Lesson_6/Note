@@ -1,0 +1,12 @@
+Tic Tac Toe Problem Decomposition
+  * Decomposing the problem
+    1. Try to write out description of the game
+    2. Outline the sequence of the gameplay a little more(higher level pseudo-code)
+    3. Make a flowchart
+Walk-through: Tic Tac Toe
+  1. Set up and display the board
+  2. Player turn
+  3. Debugging with Pry 
+  4. The main game loop
+  5. Determining the winner
+  6. Play again
